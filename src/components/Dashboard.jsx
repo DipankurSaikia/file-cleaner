@@ -5,7 +5,8 @@ import { Folder, Settings, ScanLine, Layers, Trash2 } from 'lucide-react';
 export default function Dashboard() {
   const navigate = useNavigate();
   const [directoryPath, setDirectoryPath] = useState('');
-  const [recursive, setRecursive] = useState(false);
+  const [recursive] = useState(true);
+
   const [operation, setOperation] = useState('NONE');
 
   const handleScan = () => {
@@ -42,7 +43,7 @@ export default function Dashboard() {
         </div>
 
         {/* Recursive Checkbox */}
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="checkbox"
             id="recursive"
@@ -53,7 +54,7 @@ export default function Dashboard() {
           <label htmlFor="recursive" className="ml-2 text-sm text-gray-700">
             Scan subdirectories
           </label>
-        </div>
+        </div> */}
 
         {/* Operation Dropdown */}
         <div>

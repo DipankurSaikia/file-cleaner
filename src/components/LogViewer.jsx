@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 
 export default function LogViewer() {
+  const [sending, setSending] = useState(false);
+
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
-  const [filters, setFilters] = useState({ action: 'ALL', date: '' }); // action defaults to ALL
+  const [filters, setFilters] = useState({ action: 'ALL', date: '' });
   const [message, setMessage] = useState('');
 
   const fetchLogs = async () => {
@@ -27,16 +30,20 @@ export default function LogViewer() {
       setMessage('⚠️ Please enter an email.');
       return;
     }
-
+  
+    setSending(true);
+    setMessage('');
+  
     try {
       await api.sendEmail({ email, sendEmail: true });
       setMessage('✅ Logs sent to email successfully.');
     } catch (error) {
       setMessage('❌ Error sending email: ' + error.message);
+    } finally {
+      setSending(false);
     }
   };
-
-  // Set current date on mount
+  
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     setFilters((prev) => ({ ...prev, date: today }));
@@ -50,17 +57,23 @@ export default function LogViewer() {
     <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl mx-auto mt-6">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">📊 System Logs</h2>
 
-      {message && (
-        <div
-          className={`transition-all p-3 mb-6 rounded-md text-sm font-medium ${
-            message.includes('❌') || message.includes('⚠️')
-              ? 'bg-red-100 text-red-800'
-              : 'bg-green-100 text-green-800'
-          }`}
-        >
-          {message}
-        </div>
-      )}
+      <AnimatePresence>
+        {message && (
+          <motion.div
+            key={message}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className={`transition-all p-3 mb-6 rounded-md text-sm font-medium ${
+              message.includes('❌') || message.includes('⚠️')
+                ? 'bg-red-100 text-red-800'
+                : 'bg-green-100 text-green-800'
+            }`}
+          >
+            {message}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="space-y-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -108,13 +121,43 @@ export default function LogViewer() {
             placeholder="📧 Enter email to send logs"
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-300"
           />
-          <button
-            onClick={handleSendEmail}
-            disabled={!email}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition disabled:bg-gray-400"
-          >
-            📤 Send Logs
-          </button>
+
+<button
+  onClick={handleSendEmail}
+  disabled={!email || sending}
+  className={`px-4 py-2 bg-green-600 text-white rounded-md transition hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2`}
+>
+  {sending ? (
+    <>
+      <svg
+        className="animate-spin h-4 w-4 text-white"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="4"
+        ></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        ></path>
+      </svg>
+      Sending...
+    </>
+  ) : (
+    <>
+      📤 Send Logs
+    </>
+  )}
+</button>
+
         </div>
       </div>
 
@@ -133,27 +176,35 @@ export default function LogViewer() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {logs.map((log, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                    {new Date(log.timestamp).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        log.action === 'DELETE'
-                          ? 'bg-red-100 text-red-800'
-                          : log.action === 'MOVE'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {log.action}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{log.details}</td>
-                </tr>
-              ))}
+              <AnimatePresence>
+                {logs.map((log, index) => (
+                  <motion.tr
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                  >
+                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
+                      {new Date(log.timestamp).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          log.action === 'DELETE'
+                            ? 'bg-red-100 text-red-800'
+                            : log.action === 'MOVE'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {log.action}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-600">{log.details}</td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
             </tbody>
           </table>
         </div>

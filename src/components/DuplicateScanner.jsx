@@ -6,7 +6,8 @@ import { api } from '../services/api';
 export default function DuplicateScanner() {
   const location = useLocation();
   const [directoryPath, setDirectoryPath] = useState(location.state?.directoryPath || '');
-  const [recursive, setRecursive] = useState(location.state?.recursive || false);
+  const [recursive, setRecursive] = useState(true);
+
   const [duplicateGroups, setDuplicateGroups] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -86,7 +87,7 @@ export default function DuplicateScanner() {
           </div>
         </div>
 
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="checkbox"
             id="recursive-scan"
@@ -97,7 +98,8 @@ export default function DuplicateScanner() {
           <label htmlFor="recursive-scan" className="ml-2 text-sm text-gray-700">
             Scan subdirectories
           </label>
-        </div>
+        </div> */}
+
       </div>
 
       {message && (
