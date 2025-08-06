@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Folder, Settings, ScanLine, Layers, Trash2 } from 'lucide-react';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ export default function Dashboard() {
 
   const handleScan = () => {
     if (operation === 'NONE' || !directoryPath) return;
-    
+
     if (operation === 'DELETE_DUPLICATES') {
       navigate('/duplicates', { state: { directoryPath, recursive } });
     } else if (operation === 'CATEGORIZE_FILES') {
@@ -18,21 +19,29 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-xl font-semibold mb-4">Quick Start</h2>
-      
-      <div className="space-y-4">
+    <div className="bg-white rounded-2xl shadow-lg p-8 max-w-3xl mx-auto mt-8">
+      <div className="flex items-center mb-6 space-x-3">
+        <ScanLine className="text-blue-600" />
+        <h2 className="text-2xl font-semibold text-gray-800">Quick Start</h2>
+      </div>
+
+      <div className="space-y-6">
+        {/* Directory Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Directory Path</label>
+          <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+            <Folder className="w-4 h-4 mr-2" />
+            Directory Path
+          </label>
           <input
             type="text"
             value={directoryPath}
             onChange={(e) => setDirectoryPath(e.target.value)}
-            placeholder="Enter directory path"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            placeholder="Enter full directory path"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        
+
+        {/* Recursive Checkbox */}
         <div className="flex items-center">
           <input
             type="checkbox"
@@ -41,30 +50,40 @@ export default function Dashboard() {
             onChange={(e) => setRecursive(e.target.checked)}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
-          <label htmlFor="recursive" className="ml-2 block text-sm text-gray-700">
+          <label htmlFor="recursive" className="ml-2 text-sm text-gray-700">
             Scan subdirectories
           </label>
         </div>
-        
+
+        {/* Operation Dropdown */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Operation</label>
+          <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+            <Settings className="w-4 h-4 mr-2" />
+            Operation
+          </label>
           <select
             value={operation}
             onChange={(e) => setOperation(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="NONE">Select operation</option>
-            <option value="DELETE_DUPLICATES">Find Duplicates</option>
-            <option value="CATEGORIZE_FILES">Categorize Files</option>
+            <option value="DELETE_DUPLICATES">🗑️ Find Duplicates</option>
+            <option value="CATEGORIZE_FILES">🗂️ Categorize Files</option>
           </select>
         </div>
-        
+
+        {/* Start Scan Button */}
         <button
           onClick={handleScan}
           disabled={!directoryPath || operation === 'NONE'}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+          className={`w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-white text-sm font-medium transition 
+            ${!directoryPath || operation === 'NONE'
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'}`}
         >
-          Start Scan
+          {operation === 'DELETE_DUPLICATES' && <Trash2 className="w-4 h-4" />}
+          {operation === 'CATEGORIZE_FILES' && <Layers className="w-4 h-4" />}
+          <span>Start Scan</span>
         </button>
       </div>
     </div>
