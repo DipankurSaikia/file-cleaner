@@ -5,13 +5,14 @@ export default function LogViewer() {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
-  const [filters, setFilters] = useState({ action: '', date: '' });
+  const [filters, setFilters] = useState({ action: 'ALL', date: '' }); // action defaults to ALL
   const [message, setMessage] = useState('');
 
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const response = await api.getLogs(filters.action, filters.date);
+      const actionQuery = filters.action === 'ALL' ? '' : filters.action;
+      const response = await api.getLogs(actionQuery, filters.date);
       setLogs(response.data);
       setMessage(`✅ Found ${response.data.length} logs`);
     } catch (error) {
@@ -35,8 +36,14 @@ export default function LogViewer() {
     }
   };
 
+  // Set current date on mount
   useEffect(() => {
-    fetchLogs();
+    const today = new Date().toISOString().split('T')[0];
+    setFilters((prev) => ({ ...prev, date: today }));
+  }, []);
+
+  useEffect(() => {
+    if (filters.date) fetchLogs();
   }, [filters]);
 
   return (
