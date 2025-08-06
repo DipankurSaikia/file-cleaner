@@ -50,7 +50,7 @@ export default function RuleManager() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl mx-auto mt-6">
+    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl mx-auto ">
       <h2 className="text-2xl font-bold mb-4 text-gray-800">📜 Categorization Rules</h2>
 
       {message && (
