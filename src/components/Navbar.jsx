@@ -33,19 +33,13 @@ export default function Navbar() {
       icon: <ClipboardList size={18} />,
     },
     {
-      id: 'config',
-      name: 'Configuration',
-      path: '/config',
-      icon: <Settings size={18} />,
-    },
-    {
       id: 'logs',
       name: 'Logs',
       path: '/logs',
       icon: <FileText size={18} />,
     },
   ];
-
+  
   const isActiveTab = (path) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);

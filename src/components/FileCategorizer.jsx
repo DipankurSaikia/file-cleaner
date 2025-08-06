@@ -6,7 +6,7 @@ import { api } from '../services/api';
 export default function FileCategorizer() {
   const location = useLocation();
   const [directoryPath, setDirectoryPath] = useState(location.state?.directoryPath || '');
-  const [recursive, setRecursive] = useState(location.state?.recursive || false);
+  const [recursive, setRecursive] = useState(true);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -69,18 +69,9 @@ export default function FileCategorizer() {
           </div>
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="recursive-categorize"
-            checked={recursive}
-            onChange={(e) => setRecursive(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-          <label htmlFor="recursive-categorize" className="ml-2 text-sm text-gray-700">
-            Scan subdirectories
-          </label>
-        </div>
+       
+
+
       </div>
 
       {message && (
