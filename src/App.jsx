@@ -16,7 +16,7 @@ function App() {
       <div className="min-h-screen bg-gray-100">
         <Navbar  />
         
-        <div className="container mx-auto px-4 py-8">
+        <div className=" w-full  px-4 py-8">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/duplicates" element={<DuplicateScanner />} />
