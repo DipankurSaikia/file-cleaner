@@ -27,12 +27,6 @@ export default function Navbar() {
       icon: <FolderOpen size={18} />,
     },
     {
-      id: 'rules',
-      name: 'Rule Management',
-      path: '/rules',
-      icon: <ClipboardList size={18} />,
-    },
-    {
       id: 'logs',
       name: 'Logs',
       path: '/logs',

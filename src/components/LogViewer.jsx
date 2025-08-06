@@ -186,7 +186,7 @@ export default function LogViewer() {
                     transition={{ duration: 0.2, delay: index * 0.05 }}
                   >
                     <td className="px-6 py-4 text-gray-500 whitespace-nowrap">
-                      {new Date(log.timestamp).toLocaleString()}
+                      {new Date(log.timestamp).toString()}
                     </td>
                     <td className="px-6 py-4">
                       <span
