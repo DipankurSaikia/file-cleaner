@@ -39,7 +39,7 @@ export default function LandingPage() {
           transition={{ duration: 1 }}
         >
           <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-            Welcome to <span className="text-indigo-300">FileClean Pro</span>
+            Welcome to <span className="text-indigo-300">ByteClean</span>
           </h1>
           <p className="text-lg sm:text-xl text-indigo-100 max-w-xl mx-auto">
             Remove duplicate applications and categorize them intelligently using content-based detection and rule-based classification.
@@ -50,7 +50,7 @@ export default function LandingPage() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate('/dashboard')}
-          className="mt-10 inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition text-white text-lg font-medium px-6 py-3 rounded-lg shadow-lg"
+          className=" cursor-pointer mt-10 inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 transition text-white text-lg font-medium px-6 py-3 rounded-lg shadow-lg"
         >
           <Sparkles size={20} />
           Get Started

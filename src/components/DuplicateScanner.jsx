@@ -78,7 +78,7 @@ export default function DuplicateScanner() {
             <button
               onClick={findDuplicates}
               disabled={!directoryPath || loading}
-              className={`px-5 py-2 text-white rounded-md font-medium transition ${
+              className={` cursor-pointer px-5 py-2 text-white rounded-md font-medium transition ${
                 loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
               }`}
             >

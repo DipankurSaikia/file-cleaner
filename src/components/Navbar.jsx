@@ -48,7 +48,7 @@ export default function Navbar() {
             <span className="text-2xl font-bold tracking-wide">🧹 FileClean Pro</span>
           </div> */}
             <Link to="/" className="text-2xl font-bold tracking-wide">
-                🧹 FileClean Pro
+                🧹 ByteClean
             </Link>
 
           {/* Navigation */}

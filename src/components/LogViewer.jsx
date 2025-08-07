@@ -130,7 +130,7 @@ export default function LogViewer() {
           <div className="flex items-end">
             <button
               onClick={fetchLogs}
-              className="w-full px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+              className="cursor-pointer w-full px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
             >
               🔄 Refresh Logs
             </button>
@@ -151,7 +151,7 @@ export default function LogViewer() {
           <button
             onClick={handleSendEmail}
             disabled={!email || sending}
-            className={`px-4 py-2 bg-green-600 text-white rounded-md transition hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2`}
+            className={`px-4 cursor-pointer py-2 bg-green-600 text-white rounded-md transition hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2`}
           >
             {sending ? (
               <>

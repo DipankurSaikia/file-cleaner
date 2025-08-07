@@ -68,7 +68,7 @@ export default function Dashboard() {
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="NONE">Select operation</option>
-            <option value="DELETE_DUPLICATES">🗑️ Find Duplicates</option>
+            <option value="DELETE_DUPLICATES">🗑️ Find Duplicates and Remove</option>
             <option value="CATEGORIZE_FILES">🗂️ Categorize Files</option>
           </select>
         </div>
@@ -77,7 +77,7 @@ export default function Dashboard() {
         <button
           onClick={handleScan}
           disabled={!directoryPath || operation === 'NONE'}
-          className={`w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-white text-sm font-medium transition 
+          className={` cursor-pointer w-full flex items-center justify-center space-x-2 px-4 py-2 rounded-md text-white text-sm font-medium transition 
             ${!directoryPath || operation === 'NONE'
               ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-blue-600 hover:bg-blue-700'}`}

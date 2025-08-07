@@ -92,7 +92,7 @@ export default function RuleManager() {
           <div className="flex items-end">
             <button
               onClick={handleAddRule}
-              className="px-5 py-2.5 w-full bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
+              className="cursor-pointer px-5 py-2.5 w-full bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition"
             >
               ➕ Add Rule
             </button>
