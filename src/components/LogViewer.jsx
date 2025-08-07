@@ -2,9 +2,14 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 
+const convertLogsToText = (logs) => {
+  return logs.map(log => 
+    `${new Date(log.timestamp).toISOString()} [${log.action}] ${log.details}`
+  ).join('\n');
+};
+
 export default function LogViewer() {
   const [sending, setSending] = useState(false);
-
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -43,7 +48,28 @@ export default function LogViewer() {
       setSending(false);
     }
   };
-  
+
+  const handleDownloadLogs = () => {
+    if (logs.length === 0) {
+      setMessage('⚠️ No logs to download');
+      return;
+    }
+
+    const logText = convertLogsToText(logs);
+    const blob = new Blob([logText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `logs_${filters.date || new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    setMessage('✅ Logs downloaded successfully');
+  };
+
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
     setFilters((prev) => ({ ...prev, date: today }));
@@ -122,42 +148,52 @@ export default function LogViewer() {
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-300"
           />
 
-<button
-  onClick={handleSendEmail}
-  disabled={!email || sending}
-  className={`px-4 py-2 bg-green-600 text-white rounded-md transition hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2`}
->
-  {sending ? (
-    <>
-      <svg
-        className="animate-spin h-4 w-4 text-white"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-        ></path>
-      </svg>
-      Sending...
-    </>
-  ) : (
-    <>
-      📤 Send Logs
-    </>
-  )}
-</button>
+          <button
+            onClick={handleSendEmail}
+            disabled={!email || sending}
+            className={`px-4 py-2 bg-green-600 text-white rounded-md transition hover:bg-green-700 disabled:bg-gray-400 flex items-center justify-center gap-2`}
+          >
+            {sending ? (
+              <>
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                Sending...
+              </>
+            ) : (
+              <>
+                📤 Send Logs
+              </>
+            )}
+          </button>
 
+          <button
+            onClick={handleDownloadLogs}
+            disabled={logs.length === 0}
+            className="p-2 text-gray-500 hover:text-indigo-600 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            title="Download logs"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </button>
         </div>
       </div>
 
