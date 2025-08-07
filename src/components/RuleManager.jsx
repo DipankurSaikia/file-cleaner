@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { motion } from 'framer-motion';
 
-export default function RuleManager() {
+export default function RuleManager({ onClose }) {
   const [rules, setRules] = useState([]);
   const [newRule, setNewRule] = useState({ match: '', category: '' });
   const [loading, setLoading] = useState(false);
@@ -50,19 +51,31 @@ export default function RuleManager() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-5xl mx-auto ">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">📜 Categorization Rules</h2>
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">📜 Categorization Rules</h2>
+        <button
+          onClick={onClose}
+          className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
       {message && (
-        <div
-          className={`transition-all p-3 mb-6 rounded-md text-sm font-medium ${
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`p-3 mb-6 rounded-md text-sm font-medium ${
             message.includes('Error') || message.includes('⚠️')
               ? 'bg-red-100 text-red-800'
               : 'bg-green-100 text-green-800'
           }`}
         >
           {message}
-        </div>
+        </motion.div>
       )}
 
       <div className="space-y-4 mb-8">
@@ -119,7 +132,12 @@ export default function RuleManager() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {rules.map((rule, index) => (
-                  <tr key={index}>
+                  <motion.tr 
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
                     <td className="px-6 py-4 text-gray-800">{rule.match}</td>
                     <td className="px-6 py-4 text-gray-600">{rule.category}</td>
                     <td className="px-6 py-4">
@@ -130,7 +148,7 @@ export default function RuleManager() {
                         ❌ Delete
                       </button>
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../services/api';
 import RuleManager from './RuleManager';
 
@@ -11,6 +11,7 @@ export default function FileCategorizer() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showRuleManager, setShowRuleManager] = useState(false);
 
   const categorizeFiles = async () => {
     if (!directoryPath) return;
@@ -43,10 +44,23 @@ export default function FileCategorizer() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 p-8 max-w-screen-xl mx-auto">
-      {/* File Categorizer Panel */}
-      <div className="flex-1 bg-white shadow rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">📁 File Categorizer</h2>
+    <div className="p-8 px-32  max-w-screen-xl mx-auto">
+      {/* Main Content - File Categorizer */}
+      <motion.div 
+        className="bg-white/80 backdrop-blur-sm shadow rounded-lg p-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-gray-800">📁 File Categorizer</h2>
+          <button
+            onClick={() => setShowRuleManager(true)}
+            className="cursor-pointer px-4 py-2 bg-purple-600/90 hover:bg-purple-700/90 text-white rounded-md transition-all shadow-md hover:shadow-lg"
+          >
+            🛠️ Manage Rules
+          </button>
+        </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">Directory Path</label>
@@ -59,20 +73,10 @@ export default function FileCategorizer() {
           />
         </div>
 
-        {/* <div className="mb-4 flex items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">Recursive</label>
-          <input
-            type="checkbox"
-            checked={recursive}
-            onChange={(e) => setRecursive(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-        </div> */}
-
         <button
           onClick={categorizeFiles}
           disabled={!directoryPath || loading}
-          className={`cursor-pointer w-full py-2 px-4 rounded-md text-white font-semibold ${
+          className={` cursor-pointer w-full py-2 px-4 rounded-md text-white font-semibold ${
             loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
           }`}
         >
@@ -80,13 +84,15 @@ export default function FileCategorizer() {
         </button>
 
         {message && (
-          <div
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             className={`mt-4 p-3 rounded font-medium ${
               message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
             }`}
           >
             {message}
-          </div>
+          </motion.div>
         )}
 
         {loading && (
@@ -129,12 +135,34 @@ export default function FileCategorizer() {
             ))}
           </div>
         )}
-      </div>
+      </motion.div>
 
-      {/* Rule Manager Panel */}
-      <div className=" w-[45%]  ">
-        <RuleManager />
-      </div>
+      {/* Rule Manager Modal */}
+      <AnimatePresence>
+        {showRuleManager && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+              onClick={() => setShowRuleManager(false)}
+            />
+            
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              className="fixed inset-0 flex items-center justify-center p-4 z-50"
+            >
+              <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-white/20">
+                <RuleManager onClose={() => setShowRuleManager(false)} />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
